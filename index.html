@@ -845,9 +845,15 @@ function addMessage(who, text) {
       <div class="msg-avatar">${avatar}</div>
       <div class="bubble-wrapper">
         <div class="bubble">${formatLumoText(text)}</div>
-        <button class="btn-speak" onclick="speakText(this, ${JSON.stringify(text)})" title="Écouter Lumo 🔊">🔊 Écouter</button>
+        <button class="btn-speak" title="Écouter Lumo 🔊">🔊 Écouter</button>
       </div>
     `;
+    // Attacher le texte via dataset pour éviter tout problème d'échappement
+    const btn = div.querySelector('.btn-speak');
+    btn.dataset.text = text;
+    btn.addEventListener('click', function() {
+      speakText(this, this.dataset.text);
+    });
   } else {
     div.innerHTML = `
       <div class="msg-avatar">${avatar}</div>
