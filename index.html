@@ -447,6 +447,42 @@
   .btn-speak:hover { background: #e8f4ff; border-color: var(--sky); color: #1976D2; }
   .btn-speak.speaking { background: #e8f4ff; border-color: var(--sky); color: #1976D2; }
 
+  /* ── IMAGES DANS LES BULLES ── */
+  .bubble-img {
+    max-width: 220px;
+    border-radius: 14px;
+    margin-top: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    display: block;
+    cursor: zoom-in;
+    transition: transform 0.2s;
+  }
+  .bubble-img:hover { transform: scale(1.04); }
+
+  /* ── LIENS DANS LES BULLES ── */
+  .bubble-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #e8f4ff, #d0eaff);
+    border: 2px solid var(--sky);
+    border-radius: 14px;
+    padding: 8px 14px;
+    margin-top: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1565C0;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .bubble-link:hover {
+    background: var(--sky);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(110,198,255,0.4);
+  }
+  .bubble-link::before { content: '🎮'; font-size: 1rem; }
+
   /* ── RESET BTN ── */
   .btn-reset {
     background: none;
@@ -538,7 +574,7 @@
     <button class="chip" onclick="sendChip('Pourquoi le ciel est bleu ? 🌈')">🌈 Pourquoi ?</button>
     <button class="chip" onclick="sendChip('Invente une blague ! 😂')">😂 Blague</button>
     <button class="chip" onclick="sendChip('Je veux faire un dessin, aide-moi ! 🎨')">🎨 Dessin</button>
-    <button class="chip" onclick="sendChip('On joue à un jeu ? Tu choisis lequel ! 🎮')">🎮 Jeux</button>
+    <button class="chip" onclick="sendChip('On joue à un jeu ensemble ? Propose-moi un jeu et commence à jouer avec moi tout de suite !')">🎮 Jeux</button>
   </div>
 
   <div class="listening-indicator" id="listening-indicator">
@@ -583,34 +619,69 @@ PERSONNALITÉ :
 - Tu utilises des métaphores du monde des enfants (animaux, magie, aventure)
 - Tu es TOUJOURS positif et enthousiaste : "Ouah !", "Super !", "Bravo !"
 - Tu poses UNE question à la fin pour garder l'enfant engagé
-- Tu utilises des émojis pour rendre les messages vivants 🌟🦁🌈🚀
+- Tu utilises des émojis pour rendre les messages vivants
 
 ADAPTATION PAR ÂGE — l'enfant a ${ageEnfant} ans :
 ${ageEnfant <= 5
-  ? "- Phrases TRÈS courtes (max 2-3 mots par phrase), vocabulaire ultra simple, beaucoup d'émojis, répétitions bienveillantes"
+  ? "- Phrases TRÈS courtes, vocabulaire ultra simple, beaucoup d'émojis"
   : ageEnfant <= 8
-  ? "- Phrases courtes et claires, petites explications simples, quelques émojis, enthousiasme"
-  : "- Phrases un peu plus élaborées, petites blagues, explications intéressantes, émojis occasionnels"}
+  ? "- Phrases courtes et claires, petites explications simples, enthousiasme"
+  : "- Phrases un peu plus élaborées, petites blagues, explications intéressantes"}
 
 CE QUE TU FAIS BIEN :
-✅ Raconter des histoires courtes et imaginatives
-✅ Jouer à des devinettes, charades, "je pense à un animal"
-✅ Expliquer des concepts de façon magique et simple
-✅ Aider avec les devoirs sans donner la réponse directement
-✅ Inventer des petites rimes et comptines
-✅ Jouer à "continue l'histoire", "vrai ou faux"
+- Raconter des histoires courtes et imaginatives
+- Jouer à des devinettes, charades, "je pense à un animal", "vrai ou faux"
+- Expliquer des concepts de façon magique et simple
+- Aider avec les devoirs sans donner la réponse directement
+- Inventer des petites rimes et comptines
+
+JEUX INTERACTIFS — quand l'enfant veut jouer :
+Propose un de ces jeux et anime-le toi-même tour par tour :
+- Je pense à un animal (tu penses à un animal, l'enfant pose des questions oui/non)
+- Vrai ou Faux (tu poses des affirmations rigolotes)
+- Le mot mystère (tu donnes des indices un par un)
+- Continue l'histoire (vous construisez une histoire ensemble)
+- Charades (tu poses une charade classique)
+Anime le jeu activement : donne les réponses, compte les points, félicite !
+
+IMAGES POUR LES DESSINS :
+Quand l'enfant parle de dessin ou veut un modèle, ajoute UNE image d'exemple avec ce format exact sur une ligne seule :
+[IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/.../url.jpg]
+Utilise uniquement des images de Wikimedia Commons (domaine public).
+Exemples de sujets avec leurs URLs Wikimedia :
+- Chat : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/320px-Cat_November_2010-1a.jpg]
+- Chien : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/YellowLabradorLooking_new.jpg/320px-YellowLabradorLooking_new.jpg]
+- Lapin : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/320px-Oryctolagus_cuniculus_Rcdo.jpg]
+- Cheval : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/320px-Nokota_Horses_cropped.jpg]
+- Papillon : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/320px-Camponotus_flavomarginatus_ant.jpg]
+- Fleur : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/320px-Sunflower_from_Silesia2.jpg]
+- Arc-en-ciel : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Double-alaskan-rainbow.jpg/320px-Double-alaskan-rainbow.jpg]
+- Dinosaure : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Triceratops_lores.jpg/320px-Triceratops_lores.jpg]
+- Poisson : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/320px-Camponotus_flavomarginatus_ant.jpg]
+Choisis l'image la plus proche du sujet demandé.
+
+${ageEnfant >= 7 ? `LIENS VERS DES JEUX EN LIGNE (l'enfant a ${ageEnfant} ans, tu peux proposer des liens) :
+Quand l'enfant veut jouer à un jeu en ligne, propose UN lien avec ce format exact :
+[LINK:https://www.url.com|Nom du jeu]
+Jeux sûrs et gratuits recommandés :
+- Coloriage : [LINK:https://www.coloriage.com|Coloriage en ligne]
+- Puzzles : [LINK:https://www.jigsaw-planet.com|Puzzles rigolos]
+- Mémoire : [LINK:https://www.memozor.com|Jeu de mémoire]
+- Mathématiques : [LINK:https://www.mathplayground.com|Maths en jouant]
+- Lecture : [LINK:https://www.lalilo.com|Lalilo lecture]
+- Dessin : [LINK:https://www.sketchpad.app|Dessiner en ligne]
+Choisis le lien le plus adapté à la demande.` : `LIENS : L'enfant a ${ageEnfant} ans, ne propose PAS de liens vers des sites externes.`}
 
 RÈGLES ABSOLUES :
-🚫 Jamais de contenu violent, effrayant ou triste
-🚫 Jamais de sujets adultes (mort, sexualité, politique...)
-🚫 Si hors domaine : "Cette question est pour les grands ! Demande à un adulte de confiance 😊"
-🚫 Ne jamais demander d'informations personnelles
-🚫 Si l'enfant semble triste ou en détresse : l'encourager doucement à parler à un adulte de confiance
+- Jamais de contenu violent, effrayant ou triste
+- Jamais de sujets adultes
+- Si hors domaine : "Cette question est pour les grands ! Demande à un adulte de confiance"
+- Ne jamais demander d'informations personnelles
 
 FORMAT :
 - Max 4 phrases pour les moins de 6 ans, max 7 phrases pour les plus grands
 - Termine TOUJOURS par une question ou une invitation ludique
-- Utilise des émojis à chaque message 🌟`;
+- Utilise des émojis dans le texte`;
 }
 
 // ─── STARS ───
@@ -740,20 +811,41 @@ async function sendToGroq(userMessage, isSystem) {
 }
 
 // ─── DOM HELPERS ───
+
+// Formate le texte Lumo : parse [IMG:url] et [LINK:url|texte], rend les emojis, sauts de ligne
+function formatLumoText(raw) {
+  // Echapper d'abord le HTML
+  let html = escapeHtml(raw);
+
+  // Parser [IMG:url]
+  html = html.replace(/\[IMG:(https?:\/\/[^\]]+)\]/g, (_, url) =>
+    `<br><img class="bubble-img" src="${url}" alt="image pour dessiner" onerror="this.style.display='none'">`
+  );
+
+  // Parser [LINK:url|texte]
+  html = html.replace(/\[LINK:(https?:\/\/[^|]+)\|([^\]]+)\]/g, (_, url, texte) =>
+    `<br><a class="bubble-link" href="${url}" target="_blank" rel="noopener noreferrer">${texte}</a>`
+  );
+
+  // Sauts de ligne
+  html = html.replace(/\n/g, '<br>');
+
+  return html;
+}
+
 function addMessage(who, text) {
   const box = document.getElementById('chat-box');
   const div = document.createElement('div');
   div.className = `msg ${who}`;
 
   const avatar = who === 'lumo' ? '🌟' : '👦';
-  const msgId = `msg-${Date.now()}`;
 
   if (who === 'lumo') {
     div.innerHTML = `
       <div class="msg-avatar">${avatar}</div>
       <div class="bubble-wrapper">
-        <div class="bubble" id="${msgId}">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
-        <button class="btn-speak" onclick="speakText(this, '${escapeForAttr(text)}')" title="Écouter Lumo 🔊">🔊 Écouter</button>
+        <div class="bubble">${formatLumoText(text)}</div>
+        <button class="btn-speak" onclick="speakText(this, ${JSON.stringify(text)})" title="Écouter Lumo 🔊">🔊 Écouter</button>
       </div>
     `;
   } else {
@@ -845,13 +937,27 @@ function shakeInput(id) {
 let autoSpeak = false;
 let currentUtterance = null;
 
+function cleanForTTS(text) {
+  return text
+    // Supprimer les balises [IMG:...] et [LINK:...|...]
+    .replace(/\[IMG:[^\]]+\]/g, '')
+    .replace(/\[LINK:[^\]]+\]/g, '')
+    // Supprimer TOUS les emojis (plages Unicode complètes)
+    .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
+    .replace(/[\u{2600}-\u{27BF}]/gu, '')
+    .replace(/[\u{FE00}-\u{FEFF}]/gu, '')
+    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
+    .replace(/[\u2702-\u27B0]/gu, '')
+    .replace(/[\u{E000}-\u{F8FF}]/gu, '')
+    // Nettoyer les espaces multiples
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function speakText(btn, text) {
   if (!window.speechSynthesis) return;
 
-  // Nettoyer les émojis pour la TTS
-  const clean = text.replace(/[\u{1F300}-\u{1FFFF}]/gu, '')
-                    .replace(/[✅🚫]/g, '')
-                    .replace(/\s+/g, ' ').trim();
+  const clean = cleanForTTS(text);
 
   // Si déjà en train de parler → stopper
   if (currentUtterance && window.speechSynthesis.speaking) {
@@ -864,9 +970,11 @@ function speakText(btn, text) {
     return;
   }
 
+  if (!clean) return;
+
   const utter = new SpeechSynthesisUtterance(clean);
   utter.lang = 'fr-FR';
-  utter.rate = ageEnfant <= 5 ? 0.82 : 0.92;   // plus lent pour les petits
+  utter.rate = ageEnfant <= 5 ? 0.82 : 0.92;
   utter.pitch = 1.15;
   utter.volume = 1;
 
@@ -887,10 +995,6 @@ function speakText(btn, text) {
   };
 
   window.speechSynthesis.speak(utter);
-}
-
-function escapeForAttr(str) {
-  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
 }
 
 // ─── VOCAL : RECONNAISSANCE (l'enfant parle) ───
