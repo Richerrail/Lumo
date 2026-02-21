@@ -448,16 +448,33 @@
   .btn-speak.speaking { background: #e8f4ff; border-color: var(--sky); color: #1976D2; }
 
   /* ── IMAGES DANS LES BULLES ── */
-  .bubble-img {
-    max-width: 220px;
-    border-radius: 14px;
-    margin-top: 8px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    display: block;
-    cursor: zoom-in;
-    transition: transform 0.2s;
+  .bubble-img-wrap {
+    margin-top: 10px;
+    display: inline-block;
+    position: relative;
   }
-  .bubble-img:hover { transform: scale(1.04); }
+  .bubble-img {
+    max-width: 240px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    cursor: zoom-in;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid white;
+  }
+  .bubble-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+  }
+  .img-caption {
+    font-size: 0.72rem;
+    color: #aaa;
+    font-weight: 600;
+    margin-top: 4px;
+    text-align: center;
+  }
 
   /* ── LIENS DANS LES BULLES ── */
   .bubble-link {
@@ -481,7 +498,9 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(110,198,255,0.4);
   }
-  .bubble-link::before { content: '🎮'; font-size: 1rem; }
+  .bubble-link[href*="crazygames"]::before { content: '🎮'; font-size: 1rem; }
+  .bubble-link[href*="classicgamezone"]::before { content: '🕹️'; font-size: 1rem; }
+  .bubble-link:not([href*="crazygames"]):not([href*="classicgamezone"])::before { content: '🔗'; font-size: 1rem; }
 
   /* ── RESET BTN ── */
   .btn-reset {
@@ -645,32 +664,40 @@ Propose un de ces jeux et anime-le toi-même tour par tour :
 Anime le jeu activement : donne les réponses, compte les points, félicite !
 
 IMAGES POUR LES DESSINS :
-Quand l'enfant parle de dessin ou veut un modèle, ajoute UNE image d'exemple avec ce format exact sur une ligne seule :
-[IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/.../url.jpg]
-Utilise uniquement des images de Wikimedia Commons (domaine public).
-Exemples de sujets avec leurs URLs Wikimedia :
-- Chat : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/320px-Cat_November_2010-1a.jpg]
-- Chien : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/YellowLabradorLooking_new.jpg/320px-YellowLabradorLooking_new.jpg]
-- Lapin : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/320px-Oryctolagus_cuniculus_Rcdo.jpg]
-- Cheval : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/320px-Nokota_Horses_cropped.jpg]
-- Papillon : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/320px-Camponotus_flavomarginatus_ant.jpg]
-- Fleur : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/320px-Sunflower_from_Silesia2.jpg]
-- Arc-en-ciel : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Double-alaskan-rainbow.jpg/320px-Double-alaskan-rainbow.jpg]
-- Dinosaure : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Triceratops_lores.jpg/320px-Triceratops_lores.jpg]
-- Poisson : [IMG:https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/320px-Camponotus_flavomarginatus_ant.jpg]
-Choisis l'image la plus proche du sujet demandé.
+Quand l'enfant parle de dessin ou veut un modèle à reproduire, indique le sujet avec ce format exact sur une ligne seule :
+[DESSIN:sujet]
+où "sujet" est UN mot clé en français parmi : chat, chien, lapin, cheval, lion, éléphant, girafe, oiseau, poisson, papillon, fleur, soleil, arc-en-ciel, arbre, maison, bateau, voiture, train, avion, fusée, dinosaure, dragon, licorne, grenouille, tortue, ours, singe, vache, cochon, mouton
+Exemple : [DESSIN:chat]
+N'invente pas d'autres mots clés, utilise uniquement ceux de la liste ci-dessus.
+Ajoute toujours un conseil de dessin sympa en même temps !
 
 ${ageEnfant >= 7 ? `LIENS VERS DES JEUX EN LIGNE (l'enfant a ${ageEnfant} ans, tu peux proposer des liens) :
-Quand l'enfant veut jouer à un jeu en ligne, propose UN lien avec ce format exact :
+Quand l'enfant veut jouer à un jeu en ligne, propose UN ou DEUX liens avec ce format exact :
 [LINK:https://www.url.com|Nom du jeu]
-Jeux sûrs et gratuits recommandés :
-- Coloriage : [LINK:https://www.coloriage.com|Coloriage en ligne]
-- Puzzles : [LINK:https://www.jigsaw-planet.com|Puzzles rigolos]
-- Mémoire : [LINK:https://www.memozor.com|Jeu de mémoire]
-- Mathématiques : [LINK:https://www.mathplayground.com|Maths en jouant]
-- Lecture : [LINK:https://www.lalilo.com|Lalilo lecture]
-- Dessin : [LINK:https://www.sketchpad.app|Dessiner en ligne]
-Choisis le lien le plus adapté à la demande.` : `LIENS : L'enfant a ${ageEnfant} ans, ne propose PAS de liens vers des sites externes.`}
+
+Sites de jeux recommandés (gratuits, sans inscription) :
+
+CrazyGames — jeux variés et colorés :
+- Jeux d'action/aventure : [LINK:https://www.crazygames.com/fr/t/enfants|Jeux pour enfants CrazyGames]
+- Jeux de course : [LINK:https://www.crazygames.com/fr/t/course|Jeux de course]
+- Jeux de puzzle : [LINK:https://www.crazygames.com/fr/t/puzzle|Puzzles et réflexion]
+- Jeux de sport : [LINK:https://www.crazygames.com/fr/t/sport|Jeux de sport]
+- Jeux de tir (adaptés enfants) : [LINK:https://www.crazygames.com/fr/t/tir|Jeux de tir rigolos]
+- Page d'accueil : [LINK:https://www.crazygames.com/fr|CrazyGames — plein de jeux !]
+
+ClassicGameZone — jeux classiques intemporels :
+- Pac-Man : [LINK:https://classicgamezone.com/pacman/|Pac-Man classique]
+- Tetris : [LINK:https://classicgamezone.com/tetris/|Tetris]
+- Snake : [LINK:https://classicgamezone.com/snake/|Snake]
+- Space Invaders : [LINK:https://classicgamezone.com/spaceinvaders/|Space Invaders]
+- Breakout : [LINK:https://classicgamezone.com/breakout/|Breakout]
+- Page d'accueil : [LINK:https://classicgamezone.com/|ClassicGameZone — jeux rétro !]
+
+Règles de sélection :
+- Si l'enfant veut un jeu classique/rétro → ClassicGameZone
+- Si l'enfant veut un jeu moderne/varié → CrazyGames
+- Si tu n'es pas sûr → propose les deux pages d'accueil
+- Présente toujours le lien avec enthousiasme et explique brièvement le jeu !` : `LIENS : L'enfant a ${ageEnfant} ans, ne propose PAS de liens vers des sites externes.`}
 
 RÈGLES ABSOLUES :
 - Jamais de contenu violent, effrayant ou triste
@@ -810,16 +837,109 @@ async function sendToGroq(userMessage, isSystem) {
   isLoading = false;
 }
 
+// ─── BIBLIOTHÈQUE D'IMAGES DESSIN ───
+// Sources : Wikimedia Commons (CC/domaine public) + Pixabay CDN (licence Pixabay gratuite)
+const IMAGES_DESSIN = {
+  // Animaux domestiques
+  chat:      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/280px-Cat_November_2010-1a.jpg',
+  chien:     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/YellowLabradorLooking_new.jpg/280px-YellowLabradorLooking_new.jpg',
+  lapin:     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/280px-Oryctolagus_cuniculus_Rcdo.jpg',
+  cochon:    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Gatto_europeo4.jpg/280px-Gatto_europeo4.jpg',
+  vache:     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Cow_female_black_white.jpg/280px-Cow_female_black_white.jpg',
+  mouton:    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Sheep_portrait_09.jpg/280px-Sheep_portrait_09.jpg',
+  cheval:    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/280px-Nokota_Horses_cropped.jpg',
+
+  // Animaux sauvages
+  lion:      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/280px-Lion_waiting_in_Namibia.jpg',
+  éléphant:  'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/280px-African_Bush_Elephant.jpg',
+  girafe:    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Giraffe_Mikumi_National_Park.jpg/280px-Giraffe_Mikumi_National_Park.jpg',
+  ours:      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Ours_brun_parcanimalierpyrenees_1.jpg/280px-Ours_brun_parcanimalierpyrenees_1.jpg',
+  singe:     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Capuchin_Costa_Rica.jpg/280px-Capuchin_Costa_Rica.jpg',
+  grenouille:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Collecting_frog_specimens.jpg/280px-Collecting_frog_specimens.jpg',
+  tortue:    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Turtle_in_ocean.jpg/280px-Turtle_in_ocean.jpg',
+
+  // Animaux volants / aquatiques
+  oiseau:    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/280px-A_small_cup_of_coffee.JPG',
+  poisson:   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Clown_fish_in_sea_anemone.jpg/280px-Clown_fish_in_sea_anemone.jpg',
+  papillon:  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/24701-nature-natural-beauty.jpg/280px-24701-nature-natural-beauty.jpg',
+
+  // Nature
+  fleur:     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/280px-Sunflower_from_Silesia2.jpg',
+  arbre:     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/24701-nature-natural-beauty.jpg/280px-24701-nature-natural-beauty.jpg',
+  soleil:    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg/280px-The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg',
+  'arc-en-ciel': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Double-alaskan-rainbow.jpg/280px-Double-alaskan-rainbow.jpg',
+
+  // Transports
+  voiture:   'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2019_Honda_Civic_sedan_%28facelift%2C_red%29%2C_front_8.15.19.jpg/280px-2019_Honda_Civic_sedan_%28facelift%2C_red%29%2C_front_8.15.19.jpg',
+  train:     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/TGV_Duplex_rame_280.jpg/280px-TGV_Duplex_rame_280.jpg',
+  avion:     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/A320-X-Ray.jpg/280px-A320-X-Ray.jpg',
+  bateau:    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_54_Lotus.jpg/280px-No_54_Lotus.jpg',
+  fusée:     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Rocket_Garden_at_Kennedy_Space_Center.jpg/280px-Rocket_Garden_at_Kennedy_Space_Center.jpg',
+
+  // Imaginaire
+  dinosaure: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Triceratops_lores.jpg/280px-Triceratops_lores.jpg',
+  dragon:    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Komodo_dragon.jpg/280px-Komodo_dragon.jpg',
+  licorne:   'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/280px-Nokota_Horses_cropped.jpg',
+
+  // Constructions
+  maison:    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/House_in_Salinas%2C_CA.JPG/280px-House_in_Salinas%2C_CA.JPG',
+};
+
+// Fallback Pixabay (images libres, pas de CORS) si Wikimedia échoue
+const IMAGES_FALLBACK = {
+  chat:      'https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_640.jpg',
+  chien:     'https://cdn.pixabay.com/photo/2016/02/19/15/46/dog-1210559_640.jpg',
+  lapin:     'https://cdn.pixabay.com/photo/2017/01/20/21/01/rabbit-1995666_640.jpg',
+  cheval:    'https://cdn.pixabay.com/photo/2019/07/22/20/36/horse-4356684_640.jpg',
+  lion:      'https://cdn.pixabay.com/photo/2018/04/13/21/24/lion-3317670_640.jpg',
+  éléphant:  'https://cdn.pixabay.com/photo/2016/11/14/04/45/elephant-1822636_640.jpg',
+  girafe:    'https://cdn.pixabay.com/photo/2019/08/01/07/36/giraffe-4376012_640.jpg',
+  ours:      'https://cdn.pixabay.com/photo/2019/10/17/18/34/brown-bear-4557143_640.jpg',
+  poisson:   'https://cdn.pixabay.com/photo/2020/02/04/16/26/clownfish-4818976_640.jpg',
+  papillon:  'https://cdn.pixabay.com/photo/2013/07/18/10/56/butterfly-163480_640.jpg',
+  fleur:     'https://cdn.pixabay.com/photo/2018/02/08/22/27/flower-3140492_640.jpg',
+  arbre:     'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg',
+  soleil:    'https://cdn.pixabay.com/photo/2017/02/04/12/25/sunset-2037571_640.jpg',
+  'arc-en-ciel': 'https://cdn.pixabay.com/photo/2013/07/18/10/56/rainbow-163212_640.jpg',
+  voiture:   'https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_640.jpg',
+  avion:     'https://cdn.pixabay.com/photo/2016/09/07/11/37/airport-1651434_640.jpg',
+  train:     'https://cdn.pixabay.com/photo/2016/03/27/19/22/train-1283996_640.jpg',
+  bateau:    'https://cdn.pixabay.com/photo/2019/11/10/11/33/sailboat-4615659_640.jpg',
+  fusée:     'https://cdn.pixabay.com/photo/2011/12/14/12/21/rocket-11098_640.jpg',
+  dinosaure: 'https://cdn.pixabay.com/photo/2012/04/15/19/39/dinosaur-35012_640.png',
+  dragon:    'https://cdn.pixabay.com/photo/2013/07/13/09/15/dragon-155812_640.png',
+  licorne:   'https://cdn.pixabay.com/photo/2017/07/28/14/53/unicorn-2548695_640.png',
+  maison:    'https://cdn.pixabay.com/photo/2016/11/18/17/46/house-1836070_640.jpg',
+  tortue:    'https://cdn.pixabay.com/photo/2017/02/15/17/11/turtle-2069486_640.jpg',
+  grenouille:'https://cdn.pixabay.com/photo/2014/09/08/17/28/frog-439658_640.jpg',
+  oiseau:    'https://cdn.pixabay.com/photo/2017/02/07/16/47/kingfisher-2046453_640.jpg',
+  vache:     'https://cdn.pixabay.com/photo/2019/11/04/09/58/cow-4599382_640.jpg',
+  mouton:    'https://cdn.pixabay.com/photo/2018/04/25/09/26/eautiful-3348536_640.jpg',
+  cochon:    'https://cdn.pixabay.com/photo/2017/10/20/10/58/pig-2870947_640.jpg',
+  singe:     'https://cdn.pixabay.com/photo/2019/06/23/12/15/monkey-4293882_640.jpg',
+};
+
+function getImageDessin(sujet) {
+  const s = sujet.toLowerCase().trim();
+  return IMAGES_FALLBACK[s] || IMAGES_FALLBACK['chat']; // Pixabay en priorité (CORS ok)
+}
+
 // ─── DOM HELPERS ───
 
-// Formate le texte Lumo : parse [IMG:url] et [LINK:url|texte], rend les emojis, sauts de ligne
+// Formate le texte Lumo : parse [DESSIN:sujet], [IMG:url], [LINK:url|texte]
 function formatLumoText(raw) {
-  // Echapper d'abord le HTML
   let html = escapeHtml(raw);
 
-  // Parser [IMG:url]
+  // Parser [DESSIN:sujet] → image depuis la bibliothèque locale
+  html = html.replace(/\[DESSIN:([^\]]+)\]/g, (_, sujet) => {
+    const url = getImageDessin(sujet);
+    const label = sujet.charAt(0).toUpperCase() + sujet.slice(1);
+    return `<br><div class="bubble-img-wrap"><img class="bubble-img" src="${url}" alt="Modèle : ${label}" title="Modèle pour dessiner : ${label}" onerror="this.src='https://cdn.pixabay.com/photo/2013/07/13/09/15/dragon-155812_640.png'"><div class="img-caption">Modèle : ${label} • Pixabay / Wikimedia</div></div>`;
+  });
+
+  // Parser [IMG:url] direct (fallback si le modèle envoie une URL directe)
   html = html.replace(/\[IMG:(https?:\/\/[^\]]+)\]/g, (_, url) =>
-    `<br><img class="bubble-img" src="${url}" alt="image pour dessiner" onerror="this.style.display='none'">`
+    `<br><img class="bubble-img" src="${url}" alt="image" onerror="this.style.display='none'">`
   );
 
   // Parser [LINK:url|texte]
@@ -829,7 +949,6 @@ function formatLumoText(raw) {
 
   // Sauts de ligne
   html = html.replace(/\n/g, '<br>');
-
   return html;
 }
 
