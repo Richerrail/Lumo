@@ -559,8 +559,11 @@
 <!-- SETUP -->
 <div class="setup-panel">
   <div class="setup-group">
-    <label>🔑 Clé API Groq</label>
-    <input type="password" id="api-key" placeholder="gsk_xxxxxxxxxxxx">
+    <label>🔑 Clé API Groq <span id="key-saved-badge" style="display:none;background:#e8f7ee;color:#388e3c;border-radius:8px;padding:1px 7px;font-size:0.68rem;margin-left:4px;">✓ mémorisée</span></label>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <input type="password" id="api-key" placeholder="gsk_xxxxxxxxxxxx" style="flex:1">
+      <button onclick="clearSavedKey()" title="Effacer la clé mémorisée" style="background:none;border:2px solid #ffcdd2;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:0.8rem;color:#e57373;font-weight:700;white-space:nowrap;">🗑️</button>
+    </div>
   </div>
   <div class="setup-group">
     <label>🎂 Âge de l'enfant</label>
@@ -730,6 +733,25 @@ FORMAT :
   }
 })();
 
+// ─── RESTAURER CLÉ ET ÂGE DEPUIS LOCALSTORAGE ───
+(function restoreSettings() {
+  try {
+    const savedKey = localStorage.getItem('lumo_api_key');
+    const savedAge = localStorage.getItem('lumo_age');
+    if (savedKey) {
+      document.getElementById('api-key').value = savedKey;
+      document.getElementById('key-saved-badge').style.display = 'inline';
+    }
+    if (savedAge) document.getElementById('age-select').value = savedAge;
+  } catch(e) {}
+})();
+
+function clearSavedKey() {
+  try { localStorage.removeItem('lumo_api_key'); } catch(e) {}
+  document.getElementById('api-key').value = '';
+  document.getElementById('key-saved-badge').style.display = 'none';
+}
+
 // ─── START ───
 async function startChat() {
   const key = document.getElementById('api-key').value.trim();
@@ -740,6 +762,12 @@ async function startChat() {
     alert("⚠️ Entre une clé API Groq valide (elle commence par gsk_)\n\nObtiens-en une gratuite sur console.groq.com");
     return;
   }
+
+  // Sauvegarder dans localStorage
+  try {
+    localStorage.setItem('lumo_api_key', key);
+    localStorage.setItem('lumo_age', age);
+  } catch(e) {}
 
   apiKey = key;
   ageEnfant = age;
