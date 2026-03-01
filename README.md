@@ -5,7 +5,7 @@
 ![Lumo](https://img.shields.io/badge/Lumo-Agent%20IA%20Enfants-FFD93D?style=for-the-badge&logo=sparkles)
 ![HTML](https://img.shields.io/badge/HTML-Pure-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![Groq](https://img.shields.io/badge/Groq-llama--3.3--70b-6BCB77?style=for-the-badge)
-![Gemini](https://img.shields.io/badge/Gemini-1.5--flash-4285F4?style=for-the-badge&logo=google)
+![Gemini](https://img.shields.io/badge/Gemini-2.5--flash-4285F4?style=for-the-badge&logo=google)
 ![License](https://img.shields.io/badge/License-MIT-B185F5?style=for-the-badge)
 
 ---
@@ -38,7 +38,7 @@
 2. La clé commence par `gsk_...`
 3. Limites gratuites : 30 req/min, 14 400 req/jour
 
-### Option B — Gemini 1.5 Flash (idéal pour longues conversations ✨)
+### Option B — Gemini 2.5 Flash (idéal pour longues conversations ✨)
 1. Obtiens une clé API **gratuite** sur [aistudio.google.com](https://aistudio.google.com)
 2. Clique sur **Get API Key** → **Create API key**
 3. La clé commence par `AIza...`
@@ -74,7 +74,7 @@ Un seul fichier HTML autonome. Aucun build, aucune dépendance, aucun serveur re
 
 **Stack :**
 - **UI** : HTML / CSS / JS vanilla
-- **IA** : [Groq API](https://console.groq.com) (`llama-3.3-70b-versatile`) ou [Gemini API](https://aistudio.google.com) (`gemini-1.5-flash`)
+- **IA** : [Groq API](https://console.groq.com) (`llama-3.3-70b-versatile`) ou [Gemini API](https://aistudio.google.com) (`gemini-2.5-flash`)
 - **Vocal** : Web Speech API (natif navigateur)
 - **Images** : Pixabay CDN + Wikimedia Commons (domaine public)
 
