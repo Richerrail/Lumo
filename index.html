@@ -502,6 +502,27 @@
   .bubble-link[href*="classicgamezone"]::before { content: '🕹️'; font-size: 1rem; }
   .bubble-link:not([href*="crazygames"]):not([href*="classicgamezone"])::before { content: '🔗'; font-size: 1rem; }
 
+  /* ── ENGINE SELECTOR ── */
+  .engine-btn {
+    background: white;
+    border: 2px solid #e0f0ff;
+    border-radius: 16px;
+    padding: 8px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #90CAF9;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .engine-btn:hover { border-color: var(--sky); color: #1976D2; }
+  .engine-btn.active {
+    background: linear-gradient(135deg, var(--sky), #1E88E5);
+    border-color: #1E88E5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(30,136,229,0.3);
+  }
+
   /* ── RESET BTN ── */
   .btn-reset {
     background: none;
@@ -558,13 +579,39 @@
 
 <!-- SETUP -->
 <div class="setup-panel">
-  <div class="setup-group">
+
+  <!-- Sélecteur moteur -->
+  <div class="setup-group" style="min-width:100%;flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap;">
+    <label style="margin:0;white-space:nowrap;">🤖 Moteur IA :</label>
+    <div style="display:flex;gap:8px;">
+      <button class="engine-btn active" id="btn-groq" onclick="selectEngine('groq')">
+        ⚡ Groq <span style="font-size:0.7rem;opacity:0.8;">ultra-rapide</span>
+      </button>
+      <button class="engine-btn" id="btn-gemini" onclick="selectEngine('gemini')">
+        ✨ Gemini <span style="font-size:0.7rem;opacity:0.8;">bavards</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Clé Groq -->
+  <div class="setup-group" id="group-groq">
     <label>🔑 Clé API Groq <span id="key-saved-badge" style="display:none;background:#e8f7ee;color:#388e3c;border-radius:8px;padding:1px 7px;font-size:0.68rem;margin-left:4px;">✓ mémorisée</span></label>
     <div style="display:flex;gap:6px;align-items:center;">
       <input type="password" id="api-key" placeholder="gsk_xxxxxxxxxxxx" style="flex:1">
-      <button onclick="clearSavedKey()" title="Effacer la clé mémorisée" style="background:none;border:2px solid #ffcdd2;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:0.8rem;color:#e57373;font-weight:700;white-space:nowrap;">🗑️</button>
+      <button onclick="clearSavedKey('groq')" title="Effacer" style="background:none;border:2px solid #ffcdd2;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:0.8rem;color:#e57373;font-weight:700;">🗑️</button>
     </div>
   </div>
+
+  <!-- Clé Gemini (cachée par défaut) -->
+  <div class="setup-group" id="group-gemini" style="display:none;">
+    <label>🔑 Clé API Gemini <span id="gemini-saved-badge" style="display:none;background:#e8f7ee;color:#388e3c;border-radius:8px;padding:1px 7px;font-size:0.68rem;margin-left:4px;">✓ mémorisée</span></label>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <input type="password" id="gemini-key" placeholder="AIzaSy..." style="flex:1">
+      <button onclick="clearSavedKey('gemini')" title="Effacer" style="background:none;border:2px solid #ffcdd2;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:0.8rem;color:#e57373;font-weight:700;">🗑️</button>
+    </div>
+  </div>
+
+  <!-- Âge -->
   <div class="setup-group">
     <label>🎂 Âge de l'enfant</label>
     <select id="age-select">
@@ -578,6 +625,7 @@
       <option value="10">10 ans</option>
     </select>
   </div>
+
   <button class="btn-start" onclick="startChat()">Commencer ! 🚀</button>
 </div>
 
@@ -586,7 +634,7 @@
   <div id="chat-box">
     <div class="empty-state" id="empty-state">
       <div class="big-emoji">🌟</div>
-      <p>Entre ta clé Groq et l'âge de l'enfant<br>puis clique sur <strong>Commencer</strong> !</p>
+      <p>Entre ta clé <strong>Groq</strong> et l'âge de l'enfant<br>puis clique sur <strong>Commencer</strong> !</p>
     </div>
   </div>
 
@@ -623,13 +671,32 @@
 
 <script>
 // ─── CONFIG ───
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.3-70b-versatile";
+const GROQ_URL   = "https://api.groq.com/openai/v1/chat/completions";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+const GROQ_MODEL = "llama-3.3-70b-versatile";
 
-let apiKey = "";
+let apiKey    = "";   // Groq
+let geminiKey = "";   // Gemini
+let engine    = "groq"; // moteur actif
 let ageEnfant = 6;
 let historique = [];
-let isLoading = false;
+let isLoading  = false;
+
+// ─── SÉLECTEUR DE MOTEUR ───
+function selectEngine(e) {
+  engine = e;
+  document.getElementById('btn-groq').classList.toggle('active', e === 'groq');
+  document.getElementById('btn-gemini').classList.toggle('active', e === 'gemini');
+  document.getElementById('group-groq').style.display   = e === 'groq'   ? '' : 'none';
+  document.getElementById('group-gemini').style.display = e === 'gemini' ? '' : 'none';
+  // Mettre à jour le placeholder de l'empty state
+  const hint = e === 'groq'
+    ? 'Entre ta clé <strong>Groq</strong> et l\'âge de l\'enfant<br>puis clique sur <strong>Commencer</strong> !'
+    : 'Entre ta clé <strong>Gemini</strong> et l\'âge de l\'enfant<br>puis clique sur <strong>Commencer</strong> !';
+  const es = document.getElementById('empty-state');
+  if (es) es.querySelector('p').innerHTML = hint;
+  try { localStorage.setItem('lumo_engine', e); } catch(e_) {}
+}
 
 // ─── SYSTEM PROMPT ───
 function getSystemPrompt() {
@@ -733,43 +800,67 @@ FORMAT :
   }
 })();
 
-// ─── RESTAURER CLÉ ET ÂGE DEPUIS LOCALSTORAGE ───
+// ─── RESTAURER DEPUIS LOCALSTORAGE ───
 (function restoreSettings() {
   try {
-    const savedKey = localStorage.getItem('lumo_api_key');
-    const savedAge = localStorage.getItem('lumo_age');
-    if (savedKey) {
-      document.getElementById('api-key').value = savedKey;
-      document.getElementById('key-saved-badge').style.display = 'inline';
-    }
-    if (savedAge) document.getElementById('age-select').value = savedAge;
+    const savedGroq   = localStorage.getItem('lumo_api_key');
+    const savedGemini = localStorage.getItem('lumo_gemini_key');
+    const savedAge    = localStorage.getItem('lumo_age');
+    const savedEngine = localStorage.getItem('lumo_engine') || 'groq';
+
+    if (savedGroq)   { document.getElementById('api-key').value = savedGroq; document.getElementById('key-saved-badge').style.display = 'inline'; }
+    if (savedGemini) { document.getElementById('gemini-key').value = savedGemini; document.getElementById('gemini-saved-badge').style.display = 'inline'; }
+    if (savedAge)    document.getElementById('age-select').value = savedAge;
+
+    // Appliquer le moteur sauvegardé
+    selectEngine(savedEngine);
   } catch(e) {}
 })();
 
-function clearSavedKey() {
-  try { localStorage.removeItem('lumo_api_key'); } catch(e) {}
-  document.getElementById('api-key').value = '';
-  document.getElementById('key-saved-badge').style.display = 'none';
+function clearSavedKey(which) {
+  try {
+    if (which === 'groq') {
+      localStorage.removeItem('lumo_api_key');
+      document.getElementById('api-key').value = '';
+      document.getElementById('key-saved-badge').style.display = 'none';
+    } else {
+      localStorage.removeItem('lumo_gemini_key');
+      document.getElementById('gemini-key').value = '';
+      document.getElementById('gemini-saved-badge').style.display = 'none';
+    }
+  } catch(e) {}
 }
 
 // ─── START ───
 async function startChat() {
-  const key = document.getElementById('api-key').value.trim();
   const age = parseInt(document.getElementById('age-select').value);
 
-  if (!key || !key.startsWith('gsk_')) {
-    shakeInput('api-key');
-    alert("⚠️ Entre une clé API Groq valide (elle commence par gsk_)\n\nObtiens-en une gratuite sur console.groq.com");
-    return;
+  if (engine === 'groq') {
+    const key = document.getElementById('api-key').value.trim();
+    if (!key || !key.startsWith('gsk_')) {
+      shakeInput('api-key');
+      alert("⚠️ Entre une clé API Groq valide (commence par gsk_)\n\nObtiens-en une gratuite sur console.groq.com");
+      return;
+    }
+    apiKey = key;
+    try { localStorage.setItem('lumo_api_key', key); } catch(e) {}
+  } else {
+    const key = document.getElementById('gemini-key').value.trim();
+    if (!key || !key.startsWith('AIza')) {
+      shakeInput('gemini-key');
+      alert("⚠️ Entre une clé API Gemini valide (commence par AIza)\n\nObtiens-en une gratuite sur aistudio.google.com");
+      return;
+    }
+    geminiKey = key;
+    try { localStorage.setItem('lumo_gemini_key', key); } catch(e) {}
   }
 
-  // Sauvegarder dans localStorage
+  // Sauvegarder âge et moteur
   try {
-    localStorage.setItem('lumo_api_key', key);
     localStorage.setItem('lumo_age', age);
+    localStorage.setItem('lumo_engine', engine);
   } catch(e) {}
 
-  apiKey = key;
   ageEnfant = age;
   historique = [];
 
@@ -808,53 +899,24 @@ async function sendChip(text) {
   await sendToGroq(text, false);
 }
 
-// ─── API CALL ───
+// ─── API CALL UNIVERSEL ───
 async function sendToGroq(userMessage, isSystem) {
-  if (!isSystem) {
-    historique.push({ role: "user", content: userMessage });
-  }
+  if (!isSystem) historique.push({ role: "user", content: userMessage });
 
   isLoading = true;
   const typingId = addTyping();
 
   try {
-    const messages = [
-      { role: "system", content: getSystemPrompt() },
-      ...historique
-    ];
-
-    if (isSystem) {
-      messages.push({ role: "user", content: userMessage });
+    let reply;
+    if (engine === 'gemini') {
+      reply = await callGemini(userMessage, isSystem);
+    } else {
+      reply = await callGroq(userMessage, isSystem);
     }
-
-    const res = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages,
-        temperature: 0.85,
-        max_tokens: 280,
-        top_p: 0.9
-      })
-    });
 
     removeTyping(typingId);
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `Erreur ${res.status}`);
-    }
-
-    const data = await res.json();
-    const reply = data.choices[0].message.content;
-
     historique.push({ role: "assistant", content: reply });
-    if (historique.length > 30) historique = historique.slice(-30);
-
+    if (historique.length > 40) historique = historique.slice(-40);
     addMessage('lumo', reply);
 
   } catch (err) {
@@ -863,6 +925,57 @@ async function sendToGroq(userMessage, isSystem) {
   }
 
   isLoading = false;
+}
+
+// ─── GROQ ───
+async function callGroq(userMessage, isSystem) {
+  const messages = [{ role: "system", content: getSystemPrompt() }, ...historique];
+  if (isSystem) messages.push({ role: "user", content: userMessage });
+
+  const res = await fetch(GROQ_URL, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ model: GROQ_MODEL, messages, temperature: 0.85, max_tokens: 350, top_p: 0.9 })
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || `Groq erreur ${res.status}`); }
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
+// ─── GEMINI ───
+async function callGemini(userMessage, isSystem) {
+  // Construire l'historique au format Gemini
+  const contents = [];
+
+  // Ajouter l'historique de conversation
+  for (const msg of historique.slice(0, -1)) { // sans le dernier qui vient d'être ajouté
+    contents.push({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }]
+    });
+  }
+
+  // Ajouter le message courant
+  if (isSystem) {
+    contents.push({ role: "user", parts: [{ text: userMessage }] });
+  } else {
+    contents.push({ role: "user", parts: [{ text: historique[historique.length-1]?.content || userMessage }] });
+  }
+
+  const body = {
+    system_instruction: { parts: [{ text: getSystemPrompt() }] },
+    contents,
+    generationConfig: { temperature: 0.85, maxOutputTokens: 400, topP: 0.9 }
+  };
+
+  const res = await fetch(`${GEMINI_URL}?key=${geminiKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || `Gemini erreur ${res.status}`); }
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "Oups, je n'ai pas de réponse !";
 }
 
 // ─── BIBLIOTHÈQUE D'IMAGES DESSIN ───
