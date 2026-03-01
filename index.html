@@ -944,22 +944,26 @@ async function callGroq(userMessage, isSystem) {
 
 // ─── GEMINI ───
 async function callGemini(userMessage, isSystem) {
-  // Construire l'historique au format Gemini
   const contents = [];
 
-  // Ajouter l'historique de conversation
-  for (const msg of historique.slice(0, -1)) { // sans le dernier qui vient d'être ajouté
-    contents.push({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }]
-    });
-  }
-
-  // Ajouter le message courant
   if (isSystem) {
+    // Message de bienvenue : pas dans l'historique, on l'envoie directement
     contents.push({ role: "user", parts: [{ text: userMessage }] });
   } else {
-    contents.push({ role: "user", parts: [{ text: historique[historique.length-1]?.content || userMessage }] });
+    // Conversation normale : l'historique contient déjà le message utilisateur (ajouté par sendToGroq)
+    // On convertit tout l'historique au format Gemini
+    for (const msg of historique) {
+      contents.push({
+        role: msg.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: msg.content }]
+      });
+    }
+  }
+
+  // Gemini exige que contents commence par "user" et alterne user/model
+  // Si vide ou mauvais départ, on force un message utilisateur minimal
+  if (contents.length === 0) {
+    contents.push({ role: "user", parts: [{ text: userMessage }] });
   }
 
   const body = {
@@ -973,9 +977,13 @@ async function callGemini(userMessage, isSystem) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
-  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || `Gemini erreur ${res.status}`); }
+
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.error?.message || `Gemini erreur ${res.status}`);
+  }
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || "Oups, je n'ai pas de réponse !";
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "Oups, pas de réponse !";
 }
 
 // ─── BIBLIOTHÈQUE D'IMAGES DESSIN ───
