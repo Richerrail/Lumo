@@ -41,7 +41,7 @@
 ### Option B — Gemini 2.5 Flash (idéal pour longues conversations ✨)
 1. Obtiens une clé API **gratuite** sur [aistudio.google.com](https://aistudio.google.com)
 2. Clique sur **Get API Key** → **Create API key**
-3. La clé commence par `AIza...`
+3. La clé commence par `AQ...`
 4. Limites gratuites : 15 req/min, 1 500 req/jour
 
 > Les clés sont stockées dans `localStorage` — elles restent dans ton navigateur et ne sont jamais envoyées ailleurs que vers l'API choisie.
